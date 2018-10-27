@@ -7,5 +7,6 @@ public class Main extends PluginBase implements Listener{
 	
 	public void onEnable() {
 		this.getServer().getPluginManager().registerEvents(this, this);
+		
 	}
 }
