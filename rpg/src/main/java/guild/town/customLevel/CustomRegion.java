@@ -370,6 +370,6 @@ public class CustomRegion {
         return z;
     }
     public Integer[] getLocationIndexes() {
-        return this.locationTable.keySet().stream().toArray(Integer[]::new);
+        return (Integer[]) this.locationTable.keySet().stream().toArray();
     }
 }
