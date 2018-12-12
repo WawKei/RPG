@@ -9,9 +9,6 @@ public class GenLayerNMThornBorder extends GenLayer {
 		parent = genlayer;
 	}
 
-	/**
-	 * Turn specific biomes into other biomes along their borders
-	 */
 	@Override
 	public int[] getInts(int x, int z, int width, int depth) {
 

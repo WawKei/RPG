@@ -59,9 +59,7 @@ public class BlockHelper implements Predicate<Block>
 
         if (enumfacing != null)
         {
-            state.setDamage(enumfacing.
-                    getOpposite().
-                    getIndex());
+            state.setDamage(enumfacing.getOpposite().getIndex());
             return state;
         }
         else

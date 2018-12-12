@@ -71,6 +71,6 @@ public class NightmareGenerator extends Generator {
 
     @Override
     public Vector3 getSpawn() {
-        return new Vector3(128, 256, 128);
+        return new Vector3(1024, 256, 1024);
     }
 }

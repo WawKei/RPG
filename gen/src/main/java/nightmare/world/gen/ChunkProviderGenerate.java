@@ -179,6 +179,8 @@ public class ChunkProviderGenerate implements IChunkProvider
             this.ravineGenerator.generate(this, this.worldObj, x, z, chunkprimer);
         }
 
+        generateFeatures(x, z, chunkprimer);
+
         /*Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
 
@@ -189,6 +191,14 @@ public class ChunkProviderGenerate implements IChunkProvider
 
         chunk.generateSkylightMap();
         return chunk;*/
+    }
+
+    protected final void generateFeatures(int x, int z, ChunkPrimer primer) {
+        for (NMFeature feature : NMFeature.values()) {
+            if (feature != NMFeature.NOTHING) {
+                feature.getFeatureGenerator().generate(this, this.worldObj, x, z, primer);
+            }
+        }
     }
 
     private void func_147423_a(int p_147423_1_, int p_147423_2_, int p_147423_3_)

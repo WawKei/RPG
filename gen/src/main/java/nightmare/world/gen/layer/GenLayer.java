@@ -68,38 +68,6 @@ public abstract class GenLayer
 
     public abstract int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight);
 
-    /*protected static boolean biomesEqualOrMesaPlateau(int biomeIDA, int biomeIDB)
-    {
-        if (biomeIDA == biomeIDB)
-        {
-            return true;
-        }
-        else if (biomeIDA != BiomeGenBase.mesaPlateau_F.biomeID && biomeIDA != BiomeGenBase.mesaPlateau.biomeID)
-        {
-            final BiomeGenBase biomegenbase = BiomeGenBase.getBiome(biomeIDA);
-            final BiomeGenBase biomegenbase1 = BiomeGenBase.getBiome(biomeIDB);
-
-            try
-            {
-                return biomegenbase != null && biomegenbase1 != null ? biomegenbase.isEqualTo(biomegenbase1) : false;
-            }
-            catch (Throwable throwable)
-            {
-                System.out.println("Error");
-            }
-        }
-        else
-        {
-            return biomeIDB == BiomeGenBase.mesaPlateau_F.biomeID || biomeIDB == BiomeGenBase.mesaPlateau.biomeID;
-        }
-        return false;
-    }
-
-    protected static boolean isBiomeOceanic(int p_151618_0_)
-    {
-        return p_151618_0_ == BiomeGenBase.ocean.biomeID || p_151618_0_ == BiomeGenBase.deepOcean.biomeID || p_151618_0_ == BiomeGenBase.frozenOcean.biomeID;
-    }*/
-
     protected int selectRandom(int... p_151619_1_)
     {
         return p_151619_1_[this.nextInt(p_151619_1_.length)];

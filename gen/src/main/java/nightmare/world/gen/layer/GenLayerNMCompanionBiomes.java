@@ -19,14 +19,10 @@ public class GenLayerNMCompanionBiomes extends GenLayer {
 		int input[] = parent.getInts(nx, nz, nwidth, ndepth);
 		int output[] = IntCache.getIntCache(width * depth);
 
-		int fireSwamp        = NMBiomes.town.biomeID;
-		int swamp            = NMBiomes.town.biomeID;
-		int glacier          = NMBiomes.town.biomeID;
-		int snowyForest      = NMBiomes.snow.biomeID;
-		int darkForestCenter = NMBiomes.village.biomeID;
-		int darkForest       = NMBiomes.village.biomeID;
-		int highlandsCenter  = NMBiomes.village.biomeID;
-		int highlands        = NMBiomes.village.biomeID;
+		int town        = NMBiomes.town.biomeID;
+		int forest        = NMBiomes.forest.biomeID;
+		int village = NMBiomes.village.biomeID;
+		int snow = NMBiomes.snow.biomeID;
 
 		for (int dz = 0; dz < depth; dz++) {
 			for (int dx = 0; dx < width; dx++) {
@@ -37,16 +33,10 @@ public class GenLayerNMCompanionBiomes extends GenLayer {
 				int down   = input[dx + 1 + (dz + 2) * nwidth];
 				int center = input[dx + 1 + (dz + 1) * nwidth];
 
-				if (isKey(fireSwamp, center, right, left, up, down)) {
-					output[dx + dz * width] = swamp;
-				} else if (isKey(glacier, center, right, left, up, down)) {
-					output[dx + dz * width] = snowyForest;
-				} else if (isKey(darkForestCenter, center, right, left, up, down)) {
-					output[dx + dz * width] = darkForest;
-				} else if (isKey(highlandsCenter, center, right, left, up, down)) {
-					output[dx + dz * width] = highlands;
-				} else {
-					output[dx + dz * width] = center;
+				if (isKey(town, center, right, left, up, down)) {
+					output[dx + dz * width] = forest;
+				} else if (isKey(village, center, right, left, up, down)) {
+					output[dx + dz * width] = snow;
 				}
 			}
 		}
