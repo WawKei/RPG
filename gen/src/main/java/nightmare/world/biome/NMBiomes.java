@@ -6,12 +6,14 @@ public class NMBiomes {
 	protected static final BiomeGenBase.Height height_Village = new BiomeGenBase.Height(0.125F, 0.05F);
 	protected static final BiomeGenBase.Height height_Stream = new BiomeGenBase.Height(-0.5F, 0F);
 	protected static final BiomeGenBase.Height height_Snow = new BiomeGenBase.Height(0.2F, 0.2F);
+	protected static final BiomeGenBase.Height height_Lake = new BiomeGenBase.Height(-1.8F, 0.1F);
 
 	public static final BiomeGenBase town;
 	public static final BiomeGenBase village;
 	public static final BiomeGenBase stream;
 	public static final BiomeGenBase forest;
 	public static final BiomeGenBase snow;
+	public static final BiomeGenBase lake;
 
 	static {
 		town = (new BiomeGenTown(8)).setBiomeName("Town").setHeight(height_Town);
@@ -19,5 +21,6 @@ public class NMBiomes {
 		stream = (new BiomeGenStream(7)).setBiomeName("Stream").setHeight(height_Stream).setTemperatureRainfall(0.5F, 0.1F);
 		forest = (new BiomeGenForest(4, 0)).setBiomeName("Forest");
 		snow = (new BiomeGenSnow(12)).setBiomeName("Snow Forest").setTemperatureRainfall(0.09F, 0.9F).setHeight(height_Snow);
+		lake = (new BiomeGenLake(0)).setBiomeName("Lake").setTemperatureRainfall(0.66F, 1).setHeight(height_Lake);
 	}
 }

@@ -25,7 +25,6 @@ public class GenLargeWinter extends NMTreeGenerator {
 
 	@Override
 	public boolean generate(World world, Random random, BlockPos pos) {
-		// determine a height
 		int treeHeight = 35;
 		if (random.nextInt(3) == 0) {
 			treeHeight += random.nextInt(10);
@@ -39,19 +38,15 @@ public class GenLargeWinter extends NMTreeGenerator {
 			return false;
 		}
 
-		// check if we're on dirt or grass
 		Block state = world.getBlockState(pos.down());
 		if (state.getId() != Block.GRASS && state.getId() != Block.DIRT && state.getId() != Block.FARMLAND && state.getId() != Block.PODZOL) {
 			return false;
 		}
 
-		//okay build a tree!  Go up to the height
 		buildTrunk(world, pos, treeHeight);
 
-		// make leaves
 		makeLeaves(world, pos, treeHeight);
 
-		// roots!
 		int numRoots = 4 + random.nextInt(3);
 		float offset = random.nextFloat();
 		for (int b = 0; b < numRoots; b++) {

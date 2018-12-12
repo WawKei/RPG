@@ -21,8 +21,7 @@ public class GenLayerNMBiomes extends GenLayer {
 			() -> NMBiomes.snow
 	);
 	protected static final List<Supplier<BiomeGenBase>> rareBiomes = Arrays.asList(
-			() -> NMBiomes.town,
-			() -> NMBiomes.village
+			() -> NMBiomes.lake
 	);
 
 	public GenLayerNMBiomes(long l, GenLayer genlayer) {
