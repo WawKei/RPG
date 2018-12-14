@@ -1,12 +1,1 @@
 /.metadata/
-
-
-out
-*.ipr
-*.iws
-*.iml
-.idea
-
-eclipse
-run
-classes
