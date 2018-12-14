@@ -155,7 +155,6 @@ public class ChunkProviderGenerate implements IChunkProvider
             for (int j = 0; j < 16; ++j)
             {
                 BiomeGenBase biomegenbase = p_180517_4_[j + i * 16];
-                p_180517_3_.setBiomeId(j, i, biomegenbase.biomeID);
                 biomegenbase.genTerrainBlocks(this.worldObj, this.rand, p_180517_3_, p_180517_1_ * 16 + i, p_180517_2_ * 16 + j, this.stoneNoise[j + i * 16]);
             }
         }
@@ -179,16 +178,24 @@ public class ChunkProviderGenerate implements IChunkProvider
             this.ravineGenerator.generate(this, this.worldObj, x, z, chunkprimer);
         }
 
-        /*Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
-        byte[] abyte = chunk.getBiomeArray();
+        generateFeatures(x, z, chunkprimer);
 
-        for (int i = 0; i < abyte.length; ++i)
+        for (int i = 0; i < 16; ++i)
         {
-            abyte[i] = (byte)this.biomesForGeneration[i].biomeID;
+            for (int j = 0; j < 16; ++j)
+            {
+                BiomeGenBase biomegenbase = this.biomesForGeneration[j + i * 16];
+                fullChunk.setBiomeId(j, i, biomegenbase.biomeID);
+            }
         }
+    }
 
-        chunk.generateSkylightMap();
-        return chunk;*/
+    protected final void generateFeatures(int x, int z, ChunkPrimer primer) {
+        for (NMFeature feature : NMFeature.values()) {
+            if (feature != NMFeature.NOTHING) {
+                feature.getFeatureGenerator().generate(this, this.worldObj, x, z, primer);
+            }
+        }
     }
 
     private void func_147423_a(int p_147423_1_, int p_147423_2_, int p_147423_3_)

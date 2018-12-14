@@ -65,7 +65,7 @@ public class GenLayerNMKeyBiomes extends GenLayer {
 			default:
 				return NMBiomes.town.biomeID;
 			case 1:
-				return NMBiomes.village.biomeID;
+				return NMBiomes.village.biomeID;//Add more boss biomes
 		}
 	}
 }

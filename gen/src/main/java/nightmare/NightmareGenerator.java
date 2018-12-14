@@ -14,8 +14,6 @@ import java.util.Map;
 
 public class NightmareGenerator extends Generator {
 
-    public static HashMap<Long, World> worlds = new HashMap<>();
-
     public Map<String, Object> options;
     private ChunkManager level;
     private long seed;
@@ -59,7 +57,6 @@ public class NightmareGenerator extends Generator {
     public void generateChunk(final int chunkX, final int chunkZ) {
         BaseFullChunk chunk = level.getChunk(chunkX, chunkZ);
         World world = new World(level, this.seed);
-        worlds.put((((long) chunkX) << 32) | (chunkZ & 0xffffffffL), world);
         world.getChunkProvider().provideChunk(chunkX, chunkZ, chunk);
     }
 
@@ -71,6 +68,6 @@ public class NightmareGenerator extends Generator {
 
     @Override
     public Vector3 getSpawn() {
-        return new Vector3(128, 256, 128);
+        return new Vector3(1024, 256, 1024);
     }
 }

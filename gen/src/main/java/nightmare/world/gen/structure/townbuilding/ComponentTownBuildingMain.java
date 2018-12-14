@@ -37,7 +37,8 @@ public class ComponentTownBuildingMain extends StructureComponent {
 
     @Override
     public boolean addComponentParts(World world, Random rand, StructureBoundingBox sbb) {
-        this.fillWithBlocks(world, sbb, 6, 0, 0, 6, 0, 8, Block.get(Block.STONE), Block.get(Block.STONE), false);
+        System.out.println("Build");
+        this.fillWithBlocks(world, sbb, 6, 0, 0, 6, 0, 8, Block.get(Block.REDSTONE_BLOCK), Block.get(Block.REDSTONE_BLOCK), false);
         return true;
     }
 
