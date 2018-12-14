@@ -303,7 +303,6 @@ public class World {
     public Block getBlockState(BlockPos pos)
     {
         FullChunk chunk = this.level.getChunk(pos.getX() >> 4, pos.getZ() >> 4);
-        if(chunk == null) System.out.println(this.level.getBlockIdAt(pos.getX(), pos.getY(), pos.getZ()));
         if(chunk ==  null || pos.getY() < 0 || pos.getY() > 255) return Block.get(Block.AIR);
         return Block.get(
                 chunk.getBlockId(pos.getX() & 0xf, pos.getY() & 0xff, pos.getZ() & 0xf),

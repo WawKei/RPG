@@ -314,8 +314,7 @@ public abstract class BiomeGenBase
 
                         if (j1 >= i - 1)
                         {
-                            if(iblockstate != null) chunkPrimerIn.setBlockState(i1, j1, l, iblockstate);
-                            else System.out.println("EHHHHHHHHHHHHHHHHHHHHHHHHHHHI");
+                            chunkPrimerIn.setBlockState(i1, j1, l, iblockstate);
                         }
                         else if (j1 < i - 7 - k)
                         {
