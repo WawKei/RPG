@@ -11,7 +11,7 @@ import cn.nukkit.level.generator.Generator;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.LoginPacket;
 import cn.nukkit.plugin.PluginBase;
-import com.sun.tools.internal.ws.resources.GeneratorMessages;
+//import com.sun.tools.internal.ws.resources.GeneratorMessages;
 
 public class Main extends PluginBase implements Listener {
 
