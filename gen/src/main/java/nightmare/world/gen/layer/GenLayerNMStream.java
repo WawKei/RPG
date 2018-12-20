@@ -72,9 +72,9 @@ public class GenLayerNMStream extends GenLayer {
 		BiomeGenBase biome1 = BiomeGenBase.getBiome(id1);
 		BiomeGenBase biome2 = BiomeGenBase.getBiome(id2);
 
-		if (biome1 == NMBiomes.town && biome2 == NMBiomes.town) {
+		/*if (biome1 == NMBiomes.snow && biome2 == NMBiomes.forest) {
 			return false;
-		}
+		}*/
 
 		return true;
 	}

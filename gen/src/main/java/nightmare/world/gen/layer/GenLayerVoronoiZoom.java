@@ -51,25 +51,25 @@ public class GenLayerVoronoiZoom extends GenLayer
                     for (int k3 = 0; k3 < 4; ++k3)
                     {
                         double d9 = ((double)i3 - d2) * ((double)i3 - d2) + ((double)k3 - d1) * ((double)k3 - d1);
-                        double d10 = ((double)i3 - d4) * ((double)i3 - d4) + ((double)k3 - d3) * ((double)k3 - d3);
-                        double d11 = ((double)i3 - d6) * ((double)i3 - d6) + ((double)k3 - d5) * ((double)k3 - d5);
-                        double d12 = ((double)i3 - d8) * ((double)i3 - d8) + ((double)k3 - d7) * ((double)k3 - d7);
+                            double d10 = ((double)i3 - d4) * ((double)i3 - d4) + ((double)k3 - d3) * ((double)k3 - d3);
+                            double d11 = ((double)i3 - d6) * ((double)i3 - d6) + ((double)k3 - d5) * ((double)k3 - d5);
+                            double d12 = ((double)i3 - d8) * ((double)i3 - d8) + ((double)k3 - d7) * ((double)k3 - d7);
 
-                        if (d9 < d10 && d9 < d11 && d9 < d12)
-                        {
-                            aint1[j3++] = i2;
-                        }
-                        else if (d10 < d9 && d10 < d11 && d10 < d12)
-                        {
-                            aint1[j3++] = k2;
-                        }
-                        else if (d11 < d9 && d11 < d10 && d11 < d12)
-                        {
-                            aint1[j3++] = j2;
-                        }
-                        else
-                        {
-                            aint1[j3++] = l2;
+                            if (d9 < d10 && d9 < d11 && d9 < d12)
+                            {
+                                aint1[j3++] = i2;
+                            }
+                            else if (d10 < d9 && d10 < d11 && d10 < d12)
+                            {
+                                aint1[j3++] = k2;
+                            }
+                            else if (d11 < d9 && d11 < d10 && d11 < d12)
+                            {
+                                aint1[j3++] = j2;
+                            }
+                            else
+                            {
+                                aint1[j3++] = l2;
                         }
                     }
                 }

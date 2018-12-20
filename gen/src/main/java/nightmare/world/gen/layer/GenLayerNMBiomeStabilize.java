@@ -29,16 +29,8 @@ public class GenLayerNMBiomeStabilize extends GenLayer {
 				int centerX = ((dx + offX + 1) & 0xFFFFFFFC) - offX;
 				int centerZ = ((dz + offZ + 1) & 0xFFFFFFFC) - offZ;
 
-//            	if (dx == centerX && dz == centerZ)
-//            	{
-//            		output[dx + dz * width] = input[centerX + 1 + (centerZ + 1) * nwidth];
-////            		output[dx + dz * width] = BiomeLibrary.glacier.biomeID;
-//            	}
-//            	else 
 				if (dx <= centerX + 1 && dx >= centerX - 1 && dz <= centerZ + 1 && dz >= centerZ - 1) {
 					output[dx + dz * width] = input[centerX + 1 + (centerZ + 1) * nwidth];
-//            		output[dx + dz * width] = Biome.desert.biomeID;
-//            		output[dx + dz * width] = input[dx + 1 + (dz + 1) * nwidth];
 				} else {
 					output[dx + dz * width] = input[dx + 1 + (dz + 1) * nwidth];
 				}
