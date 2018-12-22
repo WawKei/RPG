@@ -6,7 +6,6 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.level.LevelLoadEvent;
 import cn.nukkit.event.player.PlayerInteractEntityEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
@@ -17,6 +16,7 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.plugin.PluginBase;
+import waw.campus.cInventoryManager;
 
 import java.util.Random;
 //import com.sun.tools.internal.ws.resources.GeneratorMessages;
@@ -26,6 +26,7 @@ public class Main extends PluginBase implements Listener {
     @Override
     public void onEnable () {
         this.getServer().getPluginManager().registerEvents(this, this);
+        this.getServer().getPluginManager().registerEvents(new cInventoryManager(), this);
     }
 
     @EventHandler
