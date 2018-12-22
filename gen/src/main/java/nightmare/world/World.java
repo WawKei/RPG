@@ -70,7 +70,7 @@ public class World {
 
         biomes = new GenLayerNMBiomeStabilize(700L, biomes);
 
-        //biomes = new GenLayerNMThornBorder(500L, biomes);
+        biomes = new GenLayerNMThornBorder(500L, biomes);
 
         biomes = GenLayerZoom.magnify(1002L, biomes, 4);
 
@@ -125,7 +125,7 @@ public class World {
 
     public BiomeGenBase getBiomeGenForCoords(final BlockPos pos)
     {
-        if (this.isBlockLoaded(pos))
+        /*if (this.isBlockLoaded(pos))
         {
             FullChunk chunk = this.level.getChunk(pos.getX() >> 4, pos.getZ() >> 4);
 
@@ -139,10 +139,10 @@ public class World {
             }
         }
         else
-        {
-            return this.getBiomeGenerator(pos, NMBiomes.town);
-        }
-        return null;
+        {*/
+            return this.getBiomeGenerator(pos, NMBiomes.forest);
+        //}
+        //return null;
     }
 
     public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] biomes, int x, int z, int width, int height)
@@ -163,13 +163,13 @@ public class World {
             biomes = new BiomeGenBase[width * height];
         }
 
-        int[] aint = this.genBiomes.getInts(x, z, width, height);
+        int[] aint = this.biomeIndexLayer.getInts(x, z, width, height);//this.genBiomes.getInts(x, z, width, height);
 
         try
         {
             for (int i = 0; i < width * height; ++i)
             {
-                biomes[i] = BiomeGenBase.getBiomeFromBiomeList(aint[i], NMBiomes.town);
+                biomes[i] = BiomeGenBase.getBiomeFromBiomeList(aint[i], NMBiomes.forest);
             }
 
             return biomes;

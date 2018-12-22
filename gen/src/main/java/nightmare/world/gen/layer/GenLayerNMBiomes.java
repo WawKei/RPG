@@ -7,11 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * Applies the twilight forest biomes to the map
- *
- * @author Ben
- */
 public class GenLayerNMBiomes extends GenLayer {
 
 	private static final int RARE_BIOME_CHANCE = 15;
@@ -50,14 +45,6 @@ public class GenLayerNMBiomes extends GenLayer {
 				}
 			}
 		}
-
-//		for (int i = 0; i < width * depth; i++)
-//		{
-//			if (dest[i] < 0 || dest[i] > TFBiomeBase.fireSwamp.biomeID)
-//			{
-//				System.err.printf("Made a bad ID, %d at %d, %d while generating\n", dest[i], x, z);
-//			}
-//		}
 
 		return dest;
 	}

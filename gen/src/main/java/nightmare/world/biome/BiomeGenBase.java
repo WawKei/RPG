@@ -234,7 +234,7 @@ public abstract class BiomeGenBase
     {
         if (pos.getY() > 64)
         {
-            float f = (float)(temperatureNoise.func_151601_a((double)pos.getX() * 1.0D / 8.0D, (double)pos.getZ() * 1.0D / 8.0D) * 4.0D);
+            float f = (float)(temperatureNoise.getValue((double)pos.getX() * 1.0D / 8.0D, (double)pos.getZ() * 1.0D / 8.0D) * 4.0D);
             return this.temperature - (f + (float)pos.getY() - 64.0F) * 0.05F / 30.0F;
         }
         else
@@ -314,6 +314,7 @@ public abstract class BiomeGenBase
 
                         if (j1 >= i - 1)
                         {
+                            if(iblockstate == null) iblockstate = this.fillerBlock;
                             chunkPrimerIn.setBlockState(i1, j1, l, iblockstate);
                         }
                         else if (j1 < i - 7 - k)
@@ -387,7 +388,8 @@ public abstract class BiomeGenBase
         }
         else
         {
-            return NMBiomes.town;
+            //System.out.println(biomeId);
+            return NMBiomes.forest;
         }
     }
 

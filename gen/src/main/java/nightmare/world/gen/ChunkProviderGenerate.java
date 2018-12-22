@@ -1,5 +1,6 @@
 package nightmare.world.gen;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import cn.nukkit.block.Block;
@@ -11,6 +12,7 @@ import nightmare.world.ChunkCoordIntPair;
 import nightmare.world.World;
 import nightmare.world.WorldType;
 import nightmare.world.biome.BiomeGenBase;
+import nightmare.world.biome.NMBiomes;
 import nightmare.world.chunk.ChunkPrimer;
 import nightmare.world.chunk.IChunkProvider;
 import nightmare.world.gen.feature.WorldGenDungeons;
@@ -20,51 +22,52 @@ import nightmare.world.gen.structure.NMFeature;
 public class ChunkProviderGenerate implements IChunkProvider
 {
     private Random rand;
-    private NoiseGeneratorOctaves field_147431_j;
-    private NoiseGeneratorOctaves field_147432_k;
-    private NoiseGeneratorOctaves field_147429_l;
-    private NoiseGeneratorPerlin field_147430_m;
-    public NoiseGeneratorOctaves noiseGen5;
-    public NoiseGeneratorOctaves noiseGen6;
-    public NoiseGeneratorOctaves mobSpawnerNoise;
+
+    private final NoiseGeneratorOctaves minLimitPerlinNoise;
+    private final NoiseGeneratorOctaves maxLimitPerlinNoise;
+    private final NoiseGeneratorOctaves mainPerlinNoise;
+    private final NoiseGeneratorPerlin surfaceNoise;
+    private final NoiseGeneratorOctaves depthNoise;
+
     private World worldObj;
     private final boolean mapFeaturesEnabled;
-    private WorldType field_177475_o;
-    private final double[] field_147434_q;
-    private final float[] parabolicField;
+    private WorldType terrainType;
+
+    private final double[] heightMap;
+    private final float[] biomeWeights;
+
     private ChunkProviderSettings settings;
     private Block field_177476_s = Block.get(Block.WATER);
-    private double[] stoneNoise = new double[256];
     private MapGenBase caveGenerator = new MapGenCaves();
     private MapGenBase ravineGenerator = new MapGenRavine();
+    protected double[] depthBuffer = new double[256];
     private BiomeGenBase[] biomesForGeneration;
-    double[] field_147427_d;
-    double[] field_147428_e;
-    double[] field_147425_f;
-    double[] field_147426_g;
+
+    private double[] mainNoiseRegion;
+    private double[] minLimitRegion;
+    private double[] maxLimitRegion;
+    private double[] depthRegion;
 
     public ChunkProviderGenerate(World worldIn, long p_i45636_2_, boolean p_i45636_4_, String p_i45636_5_)
     {
         this.worldObj = worldIn;
         this.mapFeaturesEnabled = p_i45636_4_;
-        this.field_177475_o = worldIn.getTerrainType();
+        this.terrainType = worldIn.getTerrainType();
         this.rand = new Random(p_i45636_2_);
-        this.field_147431_j = new NoiseGeneratorOctaves(this.rand, 16);
-        this.field_147432_k = new NoiseGeneratorOctaves(this.rand, 16);
-        this.field_147429_l = new NoiseGeneratorOctaves(this.rand, 8);
-        this.field_147430_m = new NoiseGeneratorPerlin(this.rand, 4);
-        this.noiseGen5 = new NoiseGeneratorOctaves(this.rand, 10);
-        this.noiseGen6 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.mobSpawnerNoise = new NoiseGeneratorOctaves(this.rand, 8);
-        this.field_147434_q = new double[825];
-        this.parabolicField = new float[25];
+        this.minLimitPerlinNoise = new NoiseGeneratorOctaves(this.rand, 16);
+        this.maxLimitPerlinNoise = new NoiseGeneratorOctaves(this.rand, 16);
+        this.mainPerlinNoise = new NoiseGeneratorOctaves(this.rand, 8);
+        this.surfaceNoise = new NoiseGeneratorPerlin(this.rand, 4);
+        this.depthNoise = new NoiseGeneratorOctaves(rand, 16);
 
-        for (int i = -2; i <= 2; ++i)
-        {
-            for (int j = -2; j <= 2; ++j)
-            {
-                float f = 10.0F / MathHelper.sqrt_float((float)(i * i + j * j) + 0.2F);
-                this.parabolicField[i + 2 + (j + 2) * 5] = f;
+        this.heightMap = new double[825];
+        this.biomeWeights = new float[25];
+
+
+        for (int j = -2; j <= 2; ++j) {
+            for (int k = -2; k <= 2; ++k) {
+                float f = 10.0F / MathHelper.sqrt_float((float) (j * j + k * k) + 0.2F);
+                this.biomeWeights[j + 2 + (k + 2) * 5] = f;
             }
         }
 
@@ -76,58 +79,49 @@ public class ChunkProviderGenerate implements IChunkProvider
         }
     }
 
-    public void setBlocksInChunk(int p_180518_1_, int p_180518_2_, ChunkPrimer p_180518_3_)
-    {
-        this.biomesForGeneration = this.worldObj.getBiomesForGeneration(this.biomesForGeneration, p_180518_1_ * 4 - 2, p_180518_2_ * 4 - 2, 10, 10);
-        this.func_147423_a(p_180518_1_ * 4, 0, p_180518_2_ * 4);
+    protected final void setBlocksInChunk(int x, int z, ChunkPrimer data) {
+        this.biomesForGeneration = this.worldObj.getBiomesForGeneration(this.biomesForGeneration, x * 4 - 2, z * 4 - 2, 10, 10);
+        this.generateHeightmap(x * 4, 0, z * 4);
 
-        for (int i = 0; i < 4; ++i)
-        {
-            int j = i * 5;
-            int k = (i + 1) * 5;
+        for (int k = 0; k < 4; ++k) {
+            int l = k * 5;
+            int i1 = (k + 1) * 5;
 
-            for (int l = 0; l < 4; ++l)
-            {
-                int i1 = (j + l) * 33;
-                int j1 = (j + l + 1) * 33;
-                int k1 = (k + l) * 33;
-                int l1 = (k + l + 1) * 33;
+            for (int j1 = 0; j1 < 4; ++j1) {
+                int k1 = (l + j1) * 33;
+                int l1 = (l + j1 + 1) * 33;
+                int i2 = (i1 + j1) * 33;
+                int j2 = (i1 + j1 + 1) * 33;
 
-                for (int i2 = 0; i2 < 32; ++i2)
-                {
+                for (int k2 = 0; k2 < 32; ++k2) {
                     double d0 = 0.125D;
-                    double d1 = this.field_147434_q[i1 + i2];
-                    double d2 = this.field_147434_q[j1 + i2];
-                    double d3 = this.field_147434_q[k1 + i2];
-                    double d4 = this.field_147434_q[l1 + i2];
-                    double d5 = (this.field_147434_q[i1 + i2 + 1] - d1) * d0;
-                    double d6 = (this.field_147434_q[j1 + i2 + 1] - d2) * d0;
-                    double d7 = (this.field_147434_q[k1 + i2 + 1] - d3) * d0;
-                    double d8 = (this.field_147434_q[l1 + i2 + 1] - d4) * d0;
+                    double d1 = this.heightMap[k1 + k2];
+                    double d2 = this.heightMap[l1 + k2];
+                    double d3 = this.heightMap[i2 + k2];
+                    double d4 = this.heightMap[j2 + k2];
+                    double d5 = (this.heightMap[k1 + k2 + 1] - d1) * d0;
+                    double d6 = (this.heightMap[l1 + k2 + 1] - d2) * d0;
+                    double d7 = (this.heightMap[i2 + k2 + 1] - d3) * d0;
+                    double d8 = (this.heightMap[j2 + k2 + 1] - d4) * d0;
 
-                    for (int j2 = 0; j2 < 8; ++j2)
-                    {
+                    for (int l2 = 0; l2 < 8; ++l2) {
                         double d9 = 0.25D;
                         double d10 = d1;
                         double d11 = d2;
                         double d12 = (d3 - d1) * d9;
                         double d13 = (d4 - d2) * d9;
 
-                        for (int k2 = 0; k2 < 4; ++k2)
-                        {
+                        for (int i3 = 0; i3 < 4; ++i3) {
                             double d14 = 0.25D;
                             double d16 = (d11 - d10) * d14;
-                            double lvt_45_1_ = d10 - d16;
+                            double d15 = d10 - d16;
 
-                            for (int l2 = 0; l2 < 4; ++l2)
-                            {
-                                if ((lvt_45_1_ += d16) > 0.0D)
-                                {
-                                    p_180518_3_.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, Block.get(Block.STONE));
-                                }
-                                else if (i2 * 8 + j2 < this.settings.seaLevel)
-                                {
-                                    p_180518_3_.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, this.field_177476_s.clone());
+                            for (int k3 = 0; k3 < 4; ++k3) {
+                                if ((d15 += d16) > 0.0D) {
+                                    // stone here
+                                    data.setBlockState(k * 4 + i3, k2 * 8 + l2, j1 * 4 + k3, Block.get(Block.STONE));
+                                } /* else if (k2 * 8 + l2 < seaLevel) */ {
+                                    // water below sea level left until later
                                 }
                             }
 
@@ -145,17 +139,14 @@ public class ChunkProviderGenerate implements IChunkProvider
         }
     }
 
-    public void replaceBlocksForBiome(int p_180517_1_, int p_180517_2_, ChunkPrimer p_180517_3_, BiomeGenBase[] p_180517_4_)
-    {
+    public void replaceBiomeBlocks(int x, int z, ChunkPrimer primer, BiomeGenBase[] biomesIn) {
         double d0 = 0.03125D;
-        this.stoneNoise = this.field_147430_m.func_151599_a(this.stoneNoise, (double)(p_180517_1_ * 16), (double)(p_180517_2_ * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
+        this.depthBuffer = this.surfaceNoise.getRegion(this.depthBuffer, (double)(x * 16), (double)(z * 16), 16, 16, 0.0625D, 0.0625D, 1.0D);
 
-        for (int i = 0; i < 16; ++i)
-        {
-            for (int j = 0; j < 16; ++j)
-            {
-                BiomeGenBase biomegenbase = p_180517_4_[j + i * 16];
-                biomegenbase.genTerrainBlocks(this.worldObj, this.rand, p_180517_3_, p_180517_1_ * 16 + i, p_180517_2_ * 16 + j, this.stoneNoise[j + i * 16]);
+        for (int i = 0; i < 16; ++i) {
+            for (int j = 0; j < 16; ++j) {
+                BiomeGenBase biome = biomesIn[j + i * 16];
+                biome.genTerrainBlocks(this.worldObj, this.rand, primer, x * 16 + i, z * 16 + j, this.depthBuffer[j + i * 16]);
             }
         }
     }
@@ -166,7 +157,7 @@ public class ChunkProviderGenerate implements IChunkProvider
         ChunkPrimer chunkprimer = new ChunkPrimer(fullChunk);
         this.setBlocksInChunk(x, z, chunkprimer);
         this.biomesForGeneration = this.worldObj.loadBlockGeneratorData(this.biomesForGeneration, x * 16, z * 16, 16, 16);
-        this.replaceBlocksForBiome(x, z, chunkprimer, this.biomesForGeneration);
+        this.replaceBiomeBlocks(x, z, chunkprimer, this.biomesForGeneration);
 
         if (this.settings.useCaves)
         {
@@ -198,120 +189,101 @@ public class ChunkProviderGenerate implements IChunkProvider
         }
     }
 
-    private void func_147423_a(int p_147423_1_, int p_147423_2_, int p_147423_3_)
-    {
-        this.field_147426_g = this.noiseGen6.generateNoiseOctaves(this.field_147426_g, p_147423_1_, p_147423_3_, 5, 5, (double)this.settings.depthNoiseScaleX, (double)this.settings.depthNoiseScaleZ, (double)this.settings.depthNoiseScaleExponent);
-        float f = this.settings.coordinateScale;
-        float f1 = this.settings.heightScale;
-        this.field_147427_d = this.field_147429_l.generateNoiseOctaves(this.field_147427_d, p_147423_1_, p_147423_2_, p_147423_3_, 5, 33, 5, (double)(f / this.settings.mainNoiseScaleX), (double)(f1 / this.settings.mainNoiseScaleY), (double)(f / this.settings.mainNoiseScaleZ));
-        this.field_147428_e = this.field_147431_j.generateNoiseOctaves(this.field_147428_e, p_147423_1_, p_147423_2_, p_147423_3_, 5, 33, 5, (double)f, (double)f1, (double)f);
-        this.field_147425_f = this.field_147432_k.generateNoiseOctaves(this.field_147425_f, p_147423_1_, p_147423_2_, p_147423_3_, 5, 33, 5, (double)f, (double)f1, (double)f);
-        p_147423_3_ = 0;
-        p_147423_1_ = 0;
-        int i = 0;
-        int j = 0;
+    private void generateHeightmap(int x, int zero, int z) {
 
-        for (int k = 0; k < 5; ++k)
-        {
-            for (int l = 0; l < 5; ++l)
-            {
-                float f2 = 0.0F;
-                float f3 = 0.0F;
-                float f4 = 0.0F;
-                int i1 = 2;
-                BiomeGenBase biomegenbase = this.biomesForGeneration[k + 2 + (l + 2) * 10];
+        this.depthRegion = this.depthNoise.generateNoiseOctaves(this.depthRegion, x, z, 5, 5, 200.0D, 200.0D, 0.5D);
+        this.mainNoiseRegion = this.mainPerlinNoise.generateNoiseOctaves(this.mainNoiseRegion, x, zero, z, 5, 33, 5, 8.555150000000001D, 4.277575000000001D, 8.555150000000001D);
+        this.minLimitRegion = this.minLimitPerlinNoise.generateNoiseOctaves(this.minLimitRegion, x, zero, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
+        this.maxLimitRegion = this.maxLimitPerlinNoise.generateNoiseOctaves(this.maxLimitRegion, x, zero, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
+        int terrainIndex = 0;
+        int noiseIndex = 0;
 
-                for (int j1 = -i1; j1 <= i1; ++j1)
-                {
-                    for (int k1 = -i1; k1 <= i1; ++k1)
-                    {
-                        BiomeGenBase biomegenbase1 = this.biomesForGeneration[k + j1 + 2 + (l + k1 + 2) * 10];
-                        float f5 = this.settings.biomeDepthOffSet + biomegenbase1.minHeight * this.settings.biomeDepthWeight;
-                        float f6 = this.settings.biomeScaleOffset + biomegenbase1.maxHeight * this.settings.biomeScaleWeight;
+        for (int ax = 0; ax < 5; ++ax) {
+            for (int az = 0; az < 5; ++az) {
+                float totalVariation = 0.0F;
+                float totalHeight = 0.0F;
+                float totalFactor = 0.0F;
+                byte two = 2;
+                BiomeGenBase biome = this.biomesForGeneration[ax + 2 + (az + 2) * 10];
 
-                        if (this.field_177475_o == WorldType.AMPLIFIED && f5 > 0.0F)
-                        {
-                            f5 = 1.0F + f5 * 2.0F;
-                            f6 = 1.0F + f6 * 4.0F;
+                for (int ox = -two; ox <= two; ++ox) {
+                    for (int oz = -two; oz <= two; ++oz) {
+                        BiomeGenBase biome1 = this.biomesForGeneration[ax + ox + 2 + (az + oz + 2) * 10];
+                        float rootHeight = this.settings.biomeDepthOffSet + biome1.minHeight * this.settings.biomeDepthWeight;
+                        float heightVariation = this.settings.biomeScaleOffset + biome1.maxHeight * this.settings.biomeScaleWeight;
+
+                        /*if (this.terrainType == WorldType.AMPLIFIED && rootHeight > 0.0F) {
+                            rootHeight = 1.0F + rootHeight * 2.0F;
+                            heightVariation = 1.0F + heightVariation * 4.0F;
+                        }*/
+
+                        float heightFactor = this.biomeWeights[ox + 2 + (oz + 2) * 5] / (rootHeight + 2.0F);
+
+                        if (biome1.minHeight > biome.minHeight) {
+                            heightFactor /= 2.0F;
                         }
 
-                        float f7 = this.parabolicField[j1 + 2 + (k1 + 2) * 5] / (f5 + 2.0F);
-
-                        if (biomegenbase1.minHeight > biomegenbase.minHeight)
-                        {
-                            f7 /= 2.0F;
-                        }
-
-                        f2 += f6 * f7;
-                        f3 += f5 * f7;
-                        f4 += f7;
+                        totalVariation += heightVariation * heightFactor;
+                        totalHeight += rootHeight * heightFactor;
+                        totalFactor += heightFactor;
                     }
                 }
 
-                f2 = f2 / f4;
-                f3 = f3 / f4;
-                f2 = f2 * 0.9F + 0.1F;
-                f3 = (f3 * 4.0F - 1.0F) / 8.0F;
-                double d7 = this.field_147426_g[j] / 8000.0D;
+                totalVariation /= totalFactor;
+                totalHeight /= totalFactor;
+                totalVariation = totalVariation * 0.9F + 0.1F;
+                totalHeight = (totalHeight * 4.0F - 1.0F) / 8.0F;
+                double terrainNoise = this.depthRegion[noiseIndex] / 8000.0D;
 
-                if (d7 < 0.0D)
-                {
-                    d7 = -d7 * 0.3D;
+                if (terrainNoise < 0.0D) {
+                    terrainNoise = -terrainNoise * 0.3D;
                 }
 
-                d7 = d7 * 3.0D - 2.0D;
+                terrainNoise = terrainNoise * 3.0D - 2.0D;
 
-                if (d7 < 0.0D)
-                {
-                    d7 = d7 / 2.0D;
+                if (terrainNoise < 0.0D) {
+                    terrainNoise /= 2.0D;
 
-                    if (d7 < -1.0D)
-                    {
-                        d7 = -1.0D;
+                    if (terrainNoise < -1.0D) {
+                        terrainNoise = -1.0D;
                     }
 
-                    d7 = d7 / 1.4D;
-                    d7 = d7 / 2.0D;
-                }
-                else
-                {
-                    if (d7 > 1.0D)
-                    {
-                        d7 = 1.0D;
+                    terrainNoise /= 1.4D;
+                    terrainNoise /= 2.0D;
+                } else {
+                    if (terrainNoise > 1.0D) {
+                        terrainNoise = 1.0D;
                     }
 
-                    d7 = d7 / 8.0D;
+                    terrainNoise /= 8.0D;
                 }
 
-                ++j;
-                double d8 = (double)f3;
-                double d9 = (double)f2;
-                d8 = d8 + d7 * 0.2D;
-                d8 = d8 * (double)this.settings.baseSize / 8.0D;
-                double d0 = (double)this.settings.baseSize + d8 * 4.0D;
+                ++noiseIndex;
+                double heightCalc = (double) totalHeight;
+                double variationCalc = (double) totalVariation;
+                heightCalc += terrainNoise * 0.2D;
+                heightCalc = heightCalc * 8.5D / 8.0D;
+                double d5 = 8.5D + heightCalc * 4.0D;
 
-                for (int l1 = 0; l1 < 33; ++l1)
-                {
-                    double d1 = ((double)l1 - d0) * (double)this.settings.stretchY * 128.0D / 256.0D / d9;
+                for (int ay = 0; ay < 33; ++ay) {
+                    double d6 = ((double) ay - d5) * 12.0D * 128.0D / 256.0D / variationCalc;
 
-                    if (d1 < 0.0D)
-                    {
-                        d1 *= 4.0D;
+                    if (d6 < 0.0D) {
+                        d6 *= 4.0D;
                     }
 
-                    double d2 = this.field_147428_e[i] / (double)this.settings.lowerLimitScale;
-                    double d3 = this.field_147425_f[i] / (double)this.settings.upperLimitScale;
-                    double d4 = (this.field_147427_d[i] / 10.0D + 1.0D) / 2.0D;
-                    double d5 = MathHelper.denormalizeClamp(d2, d3, d4) - d1;
+                    double d7 = this.minLimitRegion[terrainIndex] / 512.0D;
+                    double d8 = this.maxLimitRegion[terrainIndex] / 512.0D;
+                    double d9 = (this.mainNoiseRegion[terrainIndex] / 10.0D + 1.0D) / 2.0D;
+                    double terrainCalc = MathHelper.clampedLerp(d7, d8, d9) - d6;
 
-                    if (l1 > 29)
-                    {
-                        double d6 = (double)((float)(l1 - 29) / 3.0F);
-                        d5 = d5 * (1.0D - d6) + -10.0D * d6;
+                    if (ay > 29) {
+                        double d11 = (double) ((float) (ay - 29) / 3.0F);
+                        terrainCalc = terrainCalc * (1.0D - d11) + -10.0D * d11;
                     }
 
-                    this.field_147434_q[i] = d5;
-                    ++i;
+                    this.heightMap[terrainIndex] = terrainCalc;
+                    ++terrainIndex;
                 }
             }
         }

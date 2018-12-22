@@ -87,6 +87,18 @@ public class MathHelper
         return num < min ? min : (num > max ? max : num);
     }
 
+    public static double clampedLerp(double lowerBnd, double upperBnd, double slide)
+    {
+        if (slide < 0.0D)
+        {
+            return lowerBnd;
+        }
+        else
+        {
+            return slide > 1.0D ? upperBnd : lowerBnd + (upperBnd - lowerBnd) * slide;
+        }
+    }
+
     public static double denormalizeClamp(double p_151238_0_, double p_151238_2_, double p_151238_4_)
     {
         return p_151238_4_ < 0.0D ? p_151238_0_ : (p_151238_4_ > 1.0D ? p_151238_2_ : p_151238_0_ + (p_151238_2_ - p_151238_0_) * p_151238_4_);

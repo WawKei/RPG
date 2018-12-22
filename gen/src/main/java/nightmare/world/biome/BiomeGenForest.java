@@ -85,7 +85,7 @@ public class BiomeGenForest extends BiomeGenBase
     {
         if (this.field_150632_aF == 1)
         {
-            double d0 = MathHelper.clamp_double((1.0D + GRASS_COLOR_NOISE.func_151601_a((double)pos.getX() / 48.0D, (double)pos.getZ() / 48.0D)) / 2.0D, 0.0D, 0.9999D);
+            double d0 = MathHelper.clamp_double((1.0D + GRASS_COLOR_NOISE.getValue((double)pos.getX() / 48.0D, (double)pos.getZ() / 48.0D)) / 2.0D, 0.0D, 0.9999D);
             Block blockflower = Block.get((int)(d0 * 10) == 9 ? Block.DANDELION : Block.POPPY, (int)(d0 * 10) == 9 ? 0 : (int)(d0 * 10));
             return blockflower.getId() == BlockFlower.TYPE_BLUE_ORCHID ? Block.get(Block.POPPY) : blockflower;
         }

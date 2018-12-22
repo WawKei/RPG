@@ -31,7 +31,6 @@ public class GenLayerNMThornBorder extends GenLayer {
 				int down   = input[dx + 1 + (dz + 2) * nwidth];
 				int center = input[dx + 1 + (dz + 1) * nwidth];
 
-				// thorn border requires also checking diagonally
 				int ur = input[dx + 0 + (dz + 0) * nwidth];
 				int ul = input[dx + 2 + (dz + 0) * nwidth];
 				int dr = input[dx + 0 + (dz + 2) * nwidth];
