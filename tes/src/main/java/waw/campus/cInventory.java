@@ -30,16 +30,17 @@ public class cInventory {
 	}
 	
 	public void showItem(Item item, int index) {
-		if(this.getShow() == 1) {
+		//if(this.getShow() == 1) {
 			player.getInventory().setItem(index, item);
-		}
+		//}
 	}
 	
 	public void updateSlots2() {
 		if(this.show == 2) {
 			for(int i = 0; i < 9; i++) {
 				slots2[i] = player.getInventory().getItem(i);
-			}	
+				System.out.println(slots2[i]);
+			}
 		}
 	}
 	

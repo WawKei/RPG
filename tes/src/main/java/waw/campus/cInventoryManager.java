@@ -1,17 +1,10 @@
 package waw.campus;
 
-import java.util.HashMap;
-
 import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.entity.EntityInventoryChangeEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerItemHeldEvent;
-import cn.nukkit.event.player.PlayerLoginEvent;
-import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.item.Item;
+
+import java.util.HashMap;
 
 
 public class cInventoryManager implements Listener{
@@ -22,10 +15,11 @@ public class cInventoryManager implements Listener{
 	private static Item Movie = Item.get(Item.BOOK).setCustomName("Movie");
 	private static Item INFO = Item.get(Item.PAPER).setCustomName("お知らせ");
 	
-	@EventHandler
+/*	@EventHandler
 	public void inventoryTrans(PlayerItemHeldEvent ev) {
 		Player player = ev.getPlayer();
 		if(ev.getItem().getId() == Item.AIR || ev.getSlot() > 9) {
+
 			if(getInventory(player).getShow() == 1) {
 				getInventory(player).setSlots2();
 				ev.setCancelled(true);	
@@ -90,6 +84,8 @@ public class cInventoryManager implements Listener{
 			getInventory(ev.getPlayer()).setSlots();
 		}
 	}
+
+*/
 	public static void setItem(Player player, Item item, int i) {
 		getInventory(player).setItem(item, i);
 	}

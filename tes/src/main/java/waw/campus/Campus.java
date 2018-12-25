@@ -1,14 +1,13 @@
 package waw.campus;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import cn.nukkit.Player;
+import cn.nukkit.item.ItemMap;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import cn.nukkit.Player;
-import cn.nukkit.item.ItemMap;
 
 public class Campus {
 
@@ -77,7 +76,7 @@ public class Campus {
 	
 
 	public void sendItemMap(Player player) {
-		ItemMap map = (ItemMap) new ItemMap().setCustomName("gif-animation");
+		ItemMap map = (ItemMap) new ItemMap().setCustomName("image");
 		cInventoryManager.getInventory(player).showItem(map, 1);
 		player.getInventory().setHeldItemSlot(1);
 		this.sendImage(player);
