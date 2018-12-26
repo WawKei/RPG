@@ -1,1 +1,4 @@
 waw\Main.class
+waw\userStatus\User.class
+waw\userStatus\UserDao.class
+waw\database\DataBase.class

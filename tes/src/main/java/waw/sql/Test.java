@@ -7,8 +7,7 @@ public class Test {
     public static void main(String[] args){
         Connection con = null;
         try {
-
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sample?useSSL=false", "root", "1qaz!QAZ");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rpgdb?useSSL=false", "root", "1qaz!QAZ");
             System.out.println("MySQLに接続できました。");
 
             Statement statement= con.createStatement();

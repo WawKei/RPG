@@ -15,11 +15,18 @@ import cn.nukkit.plugin.PluginBase;
 import waw.campus.cInventoryManager;
 import waw.itemImage.ItemImageLoader;
 import waw.status.Status;
+import waw.userStatus.UserDao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 //import com.sun.tools.internal.ws.resources.GeneratorMessages;
 
 public class Main extends PluginBase implements Listener {
 
     public static String dataPath;
+
+    public static Connection con = null;
 
     @Override
     public void onEnable () {
@@ -27,7 +34,30 @@ public class Main extends PluginBase implements Listener {
         this.getServer().getPluginManager().registerEvents(new cInventoryManager(), this);
         dataPath = this.getServer().getDataPath();
 
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rpgdb?useSSL=false", "root", "1qaz!QAZ");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getSQLState());
+            System.out.println(e.getMessage());
+            this.getServer().getLogger().error("Cannot connect database server.");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         ItemImageLoader.downloadImage(Item.APPLE, ItemImageLoader.URL_APPLE);
+    }
+
+    @Override
+    public void onDisable(){
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println("Cannot disconnect database server");
+            }
+        }
     }
 
     @EventHandler
@@ -37,6 +67,15 @@ public class Main extends PluginBase implements Listener {
 
         System.out.println(geometryData);
         System.out.println(geometryName);
+
+        UserDao dao = new UserDao();
+        try {
+            if(dao.selectUserByName(event.getPlayer().getName()) == null){
+                dao.insertUser(event.getPlayer().getName());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
