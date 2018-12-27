@@ -1,4 +1,4 @@
-package waw.userStatus;
+package waw.database.userStatus;
 
 import waw.Main;
 

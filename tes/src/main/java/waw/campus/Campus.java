@@ -75,6 +75,7 @@ public class Campus {
 	}
 	
 
+
 	public void sendItemMap(Player player) {
 		ItemMap map = (ItemMap) new ItemMap().setCustomName("image");
 		cInventoryManager.getInventory(player).showItem(map, 1);

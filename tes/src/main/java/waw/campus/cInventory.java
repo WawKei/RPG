@@ -39,7 +39,7 @@ public class cInventory {
 		if(this.show == 2) {
 			for(int i = 0; i < 9; i++) {
 				slots2[i] = player.getInventory().getItem(i);
-				System.out.println(slots2[i]);
+			//	System.out.println(slots2[i]);
 			}
 		}
 	}

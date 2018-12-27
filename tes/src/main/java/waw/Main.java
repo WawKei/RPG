@@ -9,13 +9,11 @@ import cn.nukkit.event.player.PlayerInteractEntityEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemID;
 import cn.nukkit.plugin.PluginBase;
 import waw.campus.cInventoryManager;
+import waw.database.userStatus.UserDao;
 import waw.itemImage.ItemImageLoader;
 import waw.status.Status;
-import waw.userStatus.UserDao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,6 +32,13 @@ public class Main extends PluginBase implements Listener {
         this.getServer().getPluginManager().registerEvents(new cInventoryManager(), this);
         dataPath = this.getServer().getDataPath();
 
+        connectDbServer();
+
+        ItemImageLoader.loadItemImagePath();
+       // ItemImageLoader.downloadImage(Item.APPLE, ItemImageLoader.URL_APPLE);
+    }
+
+    public void connectDbServer(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rpgdb?useSSL=false", "root", "1qaz!QAZ");
@@ -43,10 +48,9 @@ public class Main extends PluginBase implements Listener {
             System.out.println(e.getMessage());
             this.getServer().getLogger().error("Cannot connect database server.");
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        ItemImageLoader.downloadImage(Item.APPLE, ItemImageLoader.URL_APPLE);
     }
 
     @Override
@@ -104,9 +108,8 @@ public class Main extends PluginBase implements Listener {
         human.getSkin().setGeometryName("geometry.pig");
         human.spawnTo(event.getPlayer());
     */
-        if(event.getItem().getId() == ItemID.APPLE){
+
             new Status(event.getPlayer(),event.getItem()).sendItemMap(event.getPlayer());
-        }
     }
 
     @EventHandler
