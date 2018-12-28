@@ -1,6 +1,0 @@
-name: Test
-main: waw.Main
-version: 1.0
-api: ["1.0.0"]
-author: waw
-load: STARTUP

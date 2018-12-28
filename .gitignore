@@ -4,3 +4,5 @@ gen/target/
 .idea/
 gen/.idea/
 *.iml
+tes/target/
+tes/.idea/
